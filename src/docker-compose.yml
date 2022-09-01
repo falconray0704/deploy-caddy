@@ -1,0 +1,29 @@
+version: '3.6'
+
+services:
+  caddy:
+    image: "${YOUR_DOCKER_HUB_REPO:-build}/caddy:${CADDY_TAG:-latest}_clouldflare"
+    container_name: caddy_cf
+    build:
+      context: .
+      args:
+        - "CADDY_BUILDER_TAG=$CADDY_BUILDER_TAG"
+        - "CADDY_TAG=$CADDY_TAG"
+    restart: unless-stopped
+    environment:
+      CLOUDFLARE_EMAIL: 'caddy@example.com' #Replace with your email.
+      CLOUDFLARE_API_TOKEN: '12345' #Replace with a Cloudflare API token, NOT THE GLOBAL TOKEN.
+    dns:
+       - 8.8.8.8
+       - 4.4.4.4
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+      - "${PWD}/Caddyfile:/etc/caddy/Caddyfile"
+      - "${PWD}/datas/config:/config"
+      - "${PWD}/datas/data:/data"
+      - "${PWD}/datas/www:/usr/share/caddy"
+
