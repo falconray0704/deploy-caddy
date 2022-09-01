@@ -1,0 +1,27 @@
+{
+  email caddy@example.com
+}
+
+*.MYDOMAIN.COM {
+  tls caddy@example.com { 
+    dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+  }
+
+  @foo host foo.MYDOMAIN.COM
+  handle @foo {
+    respond "Foo!"
+  }
+
+  @bar host bar.MYDOMAIN.COM
+  handle @bar {
+    respond "Bar!"
+  }
+}
+
+files.MYDOMAIN.COM {
+  tls caddy@example.com { 
+    dns cloudflare {env.CLOUDFLARE_API_TOKEN}
+  }
+  root * /usr/share/caddy
+  file_server
+}
